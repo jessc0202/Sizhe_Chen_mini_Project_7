@@ -1,92 +1,95 @@
-## SQLite Lab
+[![CI](https://github.com/jessc0202/Sizhe_Chen_mini_Project_7/actions/workflows/rust.yml/badge.svg)](https://github.com/jessc0202/Sizhe_Chen_mini_Project_7/actions/workflows/rust.yml)
 
-[![CI](https://github.com/jessc0202/Sizhe_Chen_mini_Project_6_1/actions/workflows/cicd.yml/badge.svg)](https://github.com/jessc0202/Sizhe_Chen_mini_Project_6_1/actions/workflows/cicd.yml)
+# **Sizhe Chen IDS706 Project 7 – Rust Command-Line Tool**
 
-# Project Overview
+## **Project Purpose**
 
-This project involves extracting, transforming, loading (ETL), and querying data related to candy rankings. The dataset comes from [FiveThirtyEight's candy data](https://github.com/fivethirtyeight/data/tree/master/candy-power-ranking). The project includes several Python scripts to automate these processes using Databricks and unit tests using `pytest`. 
+This project demonstrates the creation of a simple command-line utility using the Rust programming language. The utility supports basic arithmetic operations, including multiplication, addition followed by multiplication, and averaging. The tool takes two numbers as input via the command line and performs the specified operation.
 
-## Project Structure
+## **Project Structure**
 
-Here’s an overview of the project structure:
+The project is structured as follows:
 
+```bash
+```bash
+.
+├── .devcontainer         # Development environment files
+│   ├── devcontainer.json  # Configuration for the development container
+│   └── Dockerfile         # Dockerfile for the development environment
+├── .github/workflows      # GitHub Actions workflow for CI/CD
+│   └── rust.yml           # GitHub Actions configuration file for Rust
+├── mylib                  # Python library containing utility functions
+│   ├── __init__.py        # Init file for the mylib package
+│   └── lib.py             # Python library with arithmetic and database functions
+├── src                    # Rust source code for the arithmetic operations
+│   └── main.rs            # Main Rust file for the project
+├── target                 # Directory for Rust build output
+├── .gitignore             # Git ignore file
+├── Cargo.lock             # Cargo lock file for Rust dependencies
+├── Cargo.toml             # Rust project configuration file (dependencies and metadata)
+├── Dockerfile             # Dockerfile for building the project
+├── LICENSE                # License for the project
+├── Makefile               # Makefile for automation tasks (build, test, etc.)
+├── README.md              # Project documentation (this file)
+├── requirements.txt       # Python requirements file for dependencies
+├── setup.sh               # Setup script for the project
+└── user_guide.md          # User guide for how to use the command-line tool
 ```
-├── Dockerfile
-├── LICENSE
-├── Makefile
-├── README.md
-├── candy-data.csv
-├── main.py
-├── mylib
-│   ├── __init__.py
-│   ├── __pycache__
-│   ├── extract.py
-│   ├── query.py
-│   └── transform_load.py
-├── requirements.txt
-├── setup.sh
-└── test_main.py
+
+## **File Descriptions**
+Cargo.toml: This file contains the dependencies and project metadata for the Rust project. It defines which crates are used, including clap for parsing command-line arguments.
+
+src/main.rs: The main source file written in Rust that implements the arithmetic logic. It includes functions for performing multiplication, addition followed by multiplication, and averaging. It also handles parsing command-line arguments.
+
+## **Project Functionality**
+This project provides two main functionalities:
+
+## Arithmetic Operations:
+
+The Rust and Python implementations both provide basic arithmetic operations including multiplication, addition followed by multiplication, and calculating averages.
+These operations are accessible via the command line.
+
+## SQL Database Interaction:
+
+The Python component uses Databricks SQL connectors to interact with databases, performing tasks such as querying and loading data.
+
+## **Usage Instructions**
+
+## Prerequisites
+Rust: Ensure that Rust is installed. If not, you can install it from Rust official website.
+
+Python: Ensure Python 3.x is installed. Install the necessary Python dependencies using:
+
+```bash
+pip install -r requirements.txt
 ```
 
-## Requirements
+## **Running the Arithmetic Functions in Rust**
+To run the arithmetic functions using Rust, use the following commands in the terminal:
 
-Before running the project, ensure you have the following dependencies installed:
-
-- Python 3.9+
-- `requests` - for fetching data from a URL.
-- `pytest` - for unit testing.
-- `databricks-sql-connector` - for connecting to Databricks.
-
-## Complex Query
-
-Here’s the complex query used in this project:
-
-```sql
-WITH candy_stats AS (
-    SELECT 
-        hard,  -- Group by the presence or absence of 'hard' feature
-        COUNT(competitorname) AS candy_count,
-        AVG(sugarpercent) AS avg_sugar,
-        AVG(pricepercent) AS avg_price,
-        AVG(winpercent) AS avg_win
-    FROM default.jessie_candy_data  -- Your candy dataset table
-    GROUP BY hard
-)
-
-SELECT *
-FROM default.jessie_candy_data
-JOIN candy_stats
-ON default.jessie_candy_data.hard = candy_stats.hard  -- Join on the 'hard' feature
-ORDER BY candy_stats.avg_win DESC;  -- Rank by average win percentage
-
+```bash
+cargo run -- 3 5
 ```
-## Query Explanation
+This will output the multiplication of 3 and 5.
 
-- **CTE `candy_stats`**: This common table expression groups candies by whether they are "hard" or not, calculating:
-    - The **total count** of candies.
-    - The **average sugar content**.
-    - The **average price**.
-    - The **average win percentage**.
-  
-- **Join**: The `candy_stats` CTE is then joined back to the original `jessie_candy_data` table, enriching the dataset with aggregated statistics for each candy type.
+## **Running the Python Functions**
+For Python, you can run the arithmetic functions directly from ``lib.py``:
+```bash
+from mylib.lib import multiply
 
-- **Ranking**: Finally, the results are ordered by the **average win percentage** in descending order to reveal whether "hard" or "non-hard" candies have a higher success rate (win percentage).
+result = multiply(4, 5)
+print(result)
+```
+## **Working with the SQL Database**
+To interact with the SQL database (using Databricks):
+1. Set the SERVER_HOSTNAME and other necessary environment variables.
+2. Use the functions in lib.py to query or load data from the database:
+```bash
+from mylib.lib import query
 
-This structure allows us to gain insights into which candy characteristics (like "hard") may contribute to higher success rates, and how candy types compare based on sugar, price, and performance.
+result = query()
+print(result)
+```
 
-- **sample output**: 
-
-Row(competitorname='Snickers', chocolate=1, fruity=0, hard=0, avg_sugar=0.75, avg_win=0.90)
-Row(competitorname='M&Ms', chocolate=1, fruity=0, hard=1, avg_sugar=0.70, avg_win=0.85)
-...
-
-## Check Format and Test Errors 
-1. Format code: `make format`
-2. Lint code: `make lint`
-3. Test code: `make test`
-
-## References 
-1. [Databricks SQL Documentation](https://docs.databricks.com/sql/index.html)
-2. [Databricks SQL Connector for Python](https://docs.databricks.com/dev-tools/python-sql-connector.html)
-3. [FiveThirtyEight Datasets](https://data.fivethirtyeight.com/)
-
+## **CI/CD Integration**
+The project is integrated with a CI/CD pipeline using GitHub Actions. The pipeline runs automated tests, builds the project, and ensures code quality with linting tools. Any commits or pull requests will trigger the workflow.
