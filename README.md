@@ -10,8 +10,7 @@ This project demonstrates the creation of a simple command-line utility using th
 
 The project is structured as follows:
 
-```bash
-```bash
+``` bash
 .
 ├── .devcontainer         # Development environment files
 │   ├── devcontainer.json  # Configuration for the development container
