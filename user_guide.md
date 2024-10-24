@@ -20,6 +20,7 @@ To use the `lib.py` module, first clone the repository that contains the file:
 ```bash
 git clone <repository-url>
 cd <repository-directory>
+```
 
 ### **How to Use**
 1. Multiplication:
@@ -53,7 +54,7 @@ from lib import calculate_average
 result = calculate_average(10, 20)
 print(f"The average of 10 and 20 is: {result}")
 ```
-output:
+Output:
 ```bash
 The average of 10 and 20 is: 15.0
 ```
