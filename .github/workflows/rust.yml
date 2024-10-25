@@ -38,4 +38,4 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: Sizhe Chen Week 7 Rust
-        path: target/release/sizhe_chen_mini_project_7
+        path: target/release/Sizhe_Chen_mini_Project_7
